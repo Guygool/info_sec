@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class File_Reader
 {
 
+    // the File_Reader object as the name may suggest recives a file Path and puts it into an object variable.
 
     private byte[] content;
 
