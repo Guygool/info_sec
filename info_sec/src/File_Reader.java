@@ -12,23 +12,19 @@ public class File_Reader
 
     // the File_Reader object as the name may suggest recives a file Path and puts it into an object variable.
 
-    private byte[] content;
 
-    public byte[] getContent() {
-        return content;
-    }
-    public File_Reader(String path) {
-        try {
-            this.content =  read(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//    public byte[] getContent() {
+//        return content;
+//    }
+    public File_Reader() {
+
+
     }
 
-    private static byte[] read(String pathToRead) throws IOException {
-        Path path = Paths.get(pathToRead);
+    public   byte[] read(String Path) throws IOException {
+        Path path = Paths.get(Path);
         byte[] data = Files.readAllBytes(path);
-//        System.out.println(data);
+        System.out.println(data);
 //        System.out.println(new String(data));
         return data;
     }
