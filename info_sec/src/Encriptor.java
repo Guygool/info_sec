@@ -2,42 +2,40 @@ import java.io.IOException;
 import java.util.Arrays;
 public class Encriptor {
 
-    private byte[] message;
-    private byte[] initialKey;
     private byte[] key1;
     private byte[] key2;
     private File_Reader reader;
-    public Encriptor(String messagePath, String initialKeyPath) {
+
+    public Encriptor() {
         this.reader = new File_Reader();
+    }
+
+    //split the input key to 2 even halves.
+    private void splitKey( byte[] initialKey){
+        byte[] k1 = Arrays.copyOfRange(initialKey,0,(initialKey.length/2));
+        byte[] k2 = Arrays.copyOfRange(initialKey,(initialKey.length/2),initialKey.length);
+        this.key1=k1;
+        this.key2=k2;
+    }
+
+    public void encript(String messagePath,String keyPath, String outputPath){
 
         try {
-            this.message = this.reader.read(messagePath);
-            this.initialKey = this.reader.read(initialKeyPath);
-            splitKey();
+            byte[] message = this.reader.read(messagePath);
+            byte[] initialKey = this.reader.read(keyPath);
+            splitKey(initialKey);
+
+            byte[] c1 = AES1(this.key1,message);
+            byte[] cipher = AES1(this.key2,c1);
+
+            this.reader.write(outputPath,cipher);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-    //split the input key to 2 even halves.
-    private void splitKey( ){
-        byte[] k1 = Arrays.copyOfRange(this.initialKey,0,(this.initialKey.length/2));
-        byte[] k2 = Arrays.copyOfRange(this.initialKey,(this.initialKey.length/2),this.initialKey.length);
-        this.key1=k1;
-        this.key2=k2;
-    }
 
-    public void encript(String outputPath){
-        byte[] c1 = AES1(this.key1,this.message);
-        byte[] cipher = AES1(this.key2,c1);
-//        System.out.println("res");
-//        System.out.println(new String(cipher));
-        System.out.println(new String (this.message));
-        System.out.println(new String(cipher));
-        this.reader.write(outputPath,cipher);
-    }
-
-    public byte[] AES1(byte[] enncryptionKey, byte[] message){
+    private byte[] AES1(byte[] enncryptionKey, byte[] message){
         byte[] cipherText = new byte[message.length];
         int start=0;
         int indexC=0;
@@ -100,11 +98,9 @@ public class Encriptor {
             byte[] blockCipher = java.util.Arrays.copyOfRange(cipher, 0,16);
 
             byte[] cipherXorMessage = toXor(toArray(blockCipher),toArray(blockMessage));
-//            byte[][] cipherXorMessage = toArray(toXor(toArray(blockCipher),toArray(blockMessage)));
-//            byte[] key2 = {10,-6,55,7,1,33,24,-43,8,12,-97,67,8,22,89,0};
+
             byte[] key2 = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
             byte[] key1 = cipherXorMessage;
-//            byte[] key1 = toXor(cipherXorMessage,toArray(key2));
 
             byte[] keyPair = new byte[32];
 
@@ -122,19 +118,4 @@ public class Encriptor {
 
     }
 
-//    public File_Reader getMessage() {
-//        return message;
-//    }
-//
-//    public File_Reader getInitialKey() {
-//        return initialKey;
-//    }
-
-    public byte[] getKey1() {
-        return key1;
-    }
-
-    public byte[] getKey2() {
-        return key2;
-    }
 }

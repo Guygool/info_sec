@@ -5,51 +5,41 @@ import java.util.concurrent.TimeUnit;
 
 public class main {
 
-    public static String hex(byte[] bytes) {
-        StringBuilder result = new StringBuilder();
-        for (byte aByte : bytes) {
-            result.append(String.format("%02x", aByte));
-            // upper case
-            // result.append(String.format("%02X", aByte));
-        }
-        return result.toString();
-    }
-
     public static void main(String[] args) {
-        long time1 = System.currentTimeMillis();
-        String cipher = "C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\cipher_short";
-        String key = "C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\key_short";
-        String message ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\message_short";
-        String outPath ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\out_short";
-        String outPath2 ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\keypair";
+        Encriptor enc = new Encriptor();
 
-        File_Reader r = new File_Reader();
-        try {
-            byte[] x = r.read(message);
-            Encriptor enc = new Encriptor(message, outPath2);
-//            enc.extractKeys(message,cipher,outPath2);
-            enc.encript(outPath);
+        if(args[0].equals("-e") || args[0].equals("-d")){
+            String messagePath="";
+            String keyPath="";
+            String outPutPath="";
+            if(args[1].equals("-k")){
+                keyPath = args[2];
+            }
+            if(args[3].equals("-i")){
+                messagePath = args[4];
+            }
+            if(args[5].equals("-o")){
+                outPutPath = args[6];
+            }
+            enc.encript(messagePath,keyPath,outPutPath);
+        }
+        if(args[0].equals("-b")){
+            String messagePath="";
+            String cipher="";
+            String outPutPath="";
+            if(args[1].equals("-m")){
+                messagePath = args[2];
+            }
+            if(args[3].equals("-c")){
+                cipher = args[4];
+            }
+            if(args[5].equals("-o")){
+                outPutPath = args[6];
+            }
+            enc.extractKeys(messagePath,cipher,outPutPath);
 
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-
-//        Encriptor encriptor = new Encriptor(message1,key);
-//        System.out.println(message1.getContent());
-//        System.out.println(hex(encriptor.getInitialKey().getContent()));
-//        System.out.println(hex(encriptor.getKey1()));
-//        System.out.println(hex(encriptor.getKey2()));
-//        long time2 = System.currentTimeMillis();
-//        System.out.println((time2 - time1));
-//        System.out.println(hex(message1.getContent()));
-//        System.out.println(new String(message1.getContent()));
-//        System.out.println(message2.getContent());
-//        System.out.println(new String(message2.getContent()));
-
     }
-
-
-
 
 }
