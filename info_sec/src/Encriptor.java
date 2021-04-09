@@ -6,13 +6,13 @@ public class Encriptor {
     private byte[] initialKey;
     private byte[] key1;
     private byte[] key2;
-
+    private File_Reader reader;
     public Encriptor(String messagePath, String initialKeyPath) {
-        File_Reader r = new File_Reader();
+        this.reader = new File_Reader();
 
         try {
-            this.message = r.read(messagePath);
-            this.initialKey = r.read(initialKeyPath);
+            this.message = this.reader.read(messagePath);
+            this.initialKey = this.reader.read(initialKeyPath);
             splitKey();
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,12 +27,14 @@ public class Encriptor {
         this.key2=k2;
     }
 
-    public byte[] encript(String outputPath){
+    public void encript(String outputPath){
         byte[] c1 = AES1(this.key1,this.message);
         byte[] cipher = AES1(this.key2,c1);
 //        System.out.println("res");
 //        System.out.println(new String(cipher));
-        return cipher;
+        System.out.println(new String (this.message));
+        System.out.println(new String(cipher));
+        this.reader.write(outputPath,cipher);
     }
 
     public byte[] AES1(byte[] enncryptionKey, byte[] message){
@@ -58,7 +60,7 @@ public class Encriptor {
         int index = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                toRet[index] = (byte)(swap[j][i]^ keyAsMat[i][j]);
+                toRet[index] = (byte)(swap[j][i]^ keyAsMat[j][i]);
                 index++;
             }
         }
@@ -79,10 +81,44 @@ public class Encriptor {
         byte[][] mat = new byte[4][4];
         int start = 0;
         for (int r = 0; r < 4; r++) {
-            mat[r] = java.util.Arrays.copyOfRange(arr, start, start + 4);
-            start += 4;
+            for (int i = 0; i < 4; i++) {
+                mat[i][r] = arr[start];
+                start++;
+            }
         }
         return mat;
+
+    }
+
+    public void extractKeys(String messagePath, String CipherPath, String outputPath){
+        File_Reader reader = new File_Reader();
+        try {
+            byte[] message = reader.read(messagePath);
+            byte[] cipher = reader.read(CipherPath);
+            //Xoring the message and cipher
+            byte[] blockMessage = java.util.Arrays.copyOfRange(message, 0,16);
+            byte[] blockCipher = java.util.Arrays.copyOfRange(cipher, 0,16);
+
+            byte[] cipherXorMessage = toXor(toArray(blockCipher),toArray(blockMessage));
+//            byte[][] cipherXorMessage = toArray(toXor(toArray(blockCipher),toArray(blockMessage)));
+//            byte[] key2 = {10,-6,55,7,1,33,24,-43,8,12,-97,67,8,22,89,0};
+            byte[] key2 = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+            byte[] key1 = cipherXorMessage;
+//            byte[] key1 = toXor(cipherXorMessage,toArray(key2));
+
+            byte[] keyPair = new byte[32];
+
+            for (int i = 0; i <key2.length ; i++) {
+                keyPair[i]= key2[i];
+            }
+            for (int i = 0; i <key1.length ; i++) {
+                keyPair[i+16]= key1[i];
+            }
+            reader.write(outputPath,keyPair);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

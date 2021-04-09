@@ -28,4 +28,13 @@ public class File_Reader
 //        System.out.println(new String(data));
         return data;
     }
+
+    public void write(String outPath, byte[] text){
+        Path path = Paths.get(outPath);
+        try {
+            Files.write(path,text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

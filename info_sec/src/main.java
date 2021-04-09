@@ -17,19 +17,19 @@ public class main {
 
     public static void main(String[] args) {
         long time1 = System.currentTimeMillis();
-        String path = "C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\cipher_long";
-        String key = "C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\key_long";
-        String message ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\message_long";
+        String cipher = "C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\cipher_short";
+        String key = "C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\key_short";
+        String message ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\message_short";
+        String outPath ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\out_short";
+        String outPath2 ="C:\\Users\\user\\Desktop\\BGU-ISE\\year 3\\semester6\\אבטחה\\שאלה 2 - קבצי בדיקה\\self_testing_files_2021\\keypair";
+
         File_Reader r = new File_Reader();
         try {
             byte[] x = r.read(message);
-            Encriptor enc = new Encriptor(path, key);
-            byte[] y = enc.encript("");
-            for (int i = 0; i < x.length; i++) {
-                if (x[i] != y[i]){
-                    System.out.println(i+" "+ x[i]+" " +y[i]);
-                }
-            }
+            Encriptor enc = new Encriptor(message, outPath2);
+//            enc.extractKeys(message,cipher,outPath2);
+            enc.encript(outPath);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
